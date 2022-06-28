@@ -9,6 +9,11 @@ import (
 )
 
 func AuthRouter(r *mux.Router) {
+	// r.Use(
+	// 	middlewares.A,
+	// 	middlewares.B,
+	// )
+
 	r.Handle(
 		"/auth/login",
 		middlewares.NewChain(
