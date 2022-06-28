@@ -12,8 +12,7 @@ import (
 // @version 1.0
 // @description Go starter's API documentation
 func main() {
-	prefix := "/api/v1"
-	routers.New(prefix)
+	r := routers.New()
 
-	log.Fatal(http.ListenAndServe(":"+env.PORT, nil))
+	log.Fatal(http.ListenAndServe(":"+env.PORT, r))
 }
