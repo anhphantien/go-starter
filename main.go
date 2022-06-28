@@ -13,6 +13,5 @@ import (
 // @description Go starter's API documentation
 func main() {
 	r := routers.New()
-
 	log.Fatal(http.ListenAndServe(":"+env.PORT, r))
 }
