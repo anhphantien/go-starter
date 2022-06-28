@@ -25,6 +25,8 @@ type authParam struct {
 	Password string `json:"password"`
 }
 
+type AuthHandler struct{}
+
 // WriteJSON provides function to format output response in JSON
 func WriteJSON(w http.ResponseWriter, code int, payload interface{}) {
 	resp, err := json.Marshal(payload)
@@ -85,7 +87,6 @@ func DecodePost(r *http.Request, structure interface{}) {
 	}
 }
 
-// AuthLogin godoc
 // @Summary Auth Login
 // @Description Auth Login
 // @Tags auth
@@ -95,7 +96,7 @@ func DecodePost(r *http.Request, structure interface{}) {
 // @Param AuthLogin body authParam true "Auth Login Input"
 // @Success 200 {object} authResp
 // @Router /api/v1/auth/login [post]
-func AuthLogin(w http.ResponseWriter, r *http.Request) {
+func (h AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	var param authParam
 	DecodePost(r, &param)
 

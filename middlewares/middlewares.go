@@ -12,7 +12,7 @@ func NewChain(middlewares ...middleware) middlewareChain {
 
 func (c middlewareChain) Then(h http.HandlerFunc) http.HandlerFunc {
 	for i := range c {
-		h = c[len(c)-1-i](h).(http.HandlerFunc)
+		h = c[len(c)-1-i](h).ServeHTTP
 	}
 	return h
 }
