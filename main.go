@@ -2,16 +2,18 @@ package main
 
 import (
 	_ "go-starter/docs"
+	"go-starter/env"
 	"go-starter/routers"
+	"log"
 	"net/http"
 )
 
 // @title Go starter
 // @version 1.0
 // @description Go starter's API documentation
-// @BasePath /api
 func main() {
-	routers.New()
+	prefix := "/api/v1"
+	routers.New(prefix)
 
-	http.ListenAndServe(":8000", nil)
+	log.Fatal(http.ListenAndServe(":"+env.PORT, nil))
 }

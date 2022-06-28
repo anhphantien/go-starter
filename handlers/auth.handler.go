@@ -94,7 +94,7 @@ func DecodePost(r *http.Request, structure interface{}) {
 // @Produce  json
 // @Param AuthLogin body authParam true "Auth Login Input"
 // @Success 200 {object} authResp
-// @Router /auth/login [post]
+// @Router /api/v1/auth/login [post]
 func AuthLogin(w http.ResponseWriter, r *http.Request) {
 	var param authParam
 	DecodePost(r, &param)
@@ -120,7 +120,7 @@ func AuthLogin(w http.ResponseWriter, r *http.Request) {
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} meResp
-// @Router /users/profile [get]
+// @Router /api/v1/users/profile [get]
 // @Security ApiKeyAuth
 func UserProfile(w http.ResponseWriter, r *http.Request) {
 	info := BasicAuthMW(w, r)
