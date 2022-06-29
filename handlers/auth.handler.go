@@ -122,7 +122,7 @@ func (h AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 // @Produce  json
 // @Success 200 {object} meResp
 // @Router /api/v1/users/profile [get]
-// @Security ApiKeyAuth
+// @Security Bearer
 func UserProfile(w http.ResponseWriter, r *http.Request) {
 	info := BasicAuthMW(w, r)
 

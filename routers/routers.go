@@ -11,7 +11,7 @@ import (
 func New() *mux.Router {
 	r := mux.NewRouter()
 	swaggerInit(r)
-	apiVersion1(r)
+	apiVersion(r, "/api/v1")
 	return r
 }
 
@@ -28,7 +28,7 @@ func swaggerInit(r *mux.Router) {
 	r.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
 }
 
-func apiVersion1(r *mux.Router) {
-	s := r.PathPrefix("/api/v1").Subrouter()
+func apiVersion(r *mux.Router, prefix string) {
+	s := r.PathPrefix(prefix).Subrouter()
 	AuthRouter(s)
 }
