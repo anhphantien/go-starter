@@ -1,18 +1,25 @@
 package middlewares
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/samber/lo"
+)
 
 type middleware func(http.Handler) http.Handler
 
 type middlewareChain []middleware
 
 func NewChain(middlewares ...middleware) middlewareChain {
-	return append(middlewareChain{}, middlewares...)
+	return lo.Reverse(middlewares)
 }
 
 func (c middlewareChain) Then(h http.HandlerFunc) http.HandlerFunc {
-	for i := range c {
-		h = c[len(c)-1-i](h).ServeHTTP
+	for _, m := range c {
+		if m == nil {
+			return h
+		}
+		h = m(h).ServeHTTP
 	}
 	return h
 }
