@@ -13,7 +13,7 @@ import (
 // @version     1.0
 // @description Go starter's API documentation
 
-// @securityDefinitions.apiKey Bearer
+// @securityDefinitions.apikey Bearer
 // @in   header
 // @name Authorization
 func main() {
