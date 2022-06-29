@@ -4,11 +4,13 @@ go 1.18
 
 require (
 	github.com/go-playground/validator/v10 v10.11.0
+	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/gorilla/mux v1.8.0
 	github.com/joho/godotenv v1.4.0
 	github.com/samber/lo v1.21.0
 	github.com/swaggo/http-swagger v1.3.0
 	github.com/swaggo/swag v1.8.3
+	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 	gorm.io/driver/mysql v1.3.4
 	gorm.io/gorm v1.23.6
 )
@@ -28,7 +30,6 @@ require (
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe // indirect
-	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d // indirect
 	golang.org/x/exp v0.0.0-20220613132600-b0d781184e0d // indirect
 	golang.org/x/net v0.0.0-20220624214902-1bab6f366d9e // indirect
 	golang.org/x/sys v0.0.0-20220627191245-f75cf1eec38b // indirect

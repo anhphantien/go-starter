@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"go-starter/response"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -9,21 +10,16 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-type Error struct {
-	Field   string `json:"field"`
-	Message string `json:"message"`
-}
-
-func ValidateRequestBody(r *http.Request, body any) any {
+func ValidateRequestBody(r *http.Request, body any) []response.Error {
 	_body, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal([]byte(_body), body)
 
 	if err := validator.New().Struct(body); err != nil {
 		validationErrors := err.(validator.ValidationErrors)
-		errors := make([]Error, len(validationErrors))
+		errors := make([]response.Error, len(validationErrors))
 
 		for i, fieldError := range validationErrors {
-			errors[i] = Error{
+			errors[i] = response.Error{
 				Field: strings.ToLower(fieldError.Field()),
 				Message: func(fieldError validator.FieldError) string {
 					switch fieldError.Tag() {
