@@ -3,7 +3,7 @@ package utils
 import (
 	"encoding/json"
 	"go-starter/response"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 
@@ -11,7 +11,7 @@ import (
 )
 
 func ValidateRequestBody(r *http.Request, payload any) []response.Error {
-	_payload, _ := ioutil.ReadAll(r.Body)
+	_payload, _ := io.ReadAll(r.Body)
 	json.Unmarshal(_payload, payload)
 
 	if err := validator.New().Struct(payload); err != nil {
