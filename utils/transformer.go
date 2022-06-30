@@ -1,6 +1,9 @@
 package utils
 
-import "strconv"
+import (
+	"encoding/json"
+	"strconv"
+)
 
 func ConvertToID(v any) uint64 {
 	switch _v := v.(type) {
@@ -12,4 +15,11 @@ func ConvertToID(v any) uint64 {
 		n, _ := strconv.ParseUint(v.(string), 10, 64)
 		return n
 	}
+}
+
+func ConvertToMap(v any) map[string]any {
+	m := map[string]any{}
+	_v, _ := json.Marshal(v)
+	json.Unmarshal(_v, &m)
+	return m
 }

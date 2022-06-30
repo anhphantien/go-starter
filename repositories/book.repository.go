@@ -4,9 +4,7 @@ import (
 	"go-starter/dto"
 	"go-starter/entities"
 	"go-starter/utils"
-	"net/http"
 
-	"github.com/gorilla/mux"
 	"github.com/jinzhu/copier"
 	"gorm.io/gorm/clause"
 )
@@ -27,9 +25,7 @@ func (r BookRepository) Create(body dto.CreateBookBody) (book entities.Book, err
 	return book, err
 }
 
-func (r BookRepository) Update(_r *http.Request, body dto.UpdateBookBody) (book entities.Book, err error) {
-	id := mux.Vars(_r)["id"]
-
+func (r BookRepository) Update(id any, body dto.UpdateBookBody) (book entities.Book, err error) {
 	book, err = BookRepository{}.FindOneByID(id)
 	if err != nil {
 		return book, err
@@ -38,7 +34,7 @@ func (r BookRepository) Update(_r *http.Request, body dto.UpdateBookBody) (book 
 	copier.Copy(&book, body)
 	err = CreateSqlBuilder(book).
 		Omit(clause.Associations). // skip auto create/update
-		Updates(utils.FilterRequestBody(_r, body)).Error
+		Updates(utils.ConvertToMap(body)).Error
 	return book, err
 }
 

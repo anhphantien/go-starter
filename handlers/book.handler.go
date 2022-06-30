@@ -170,7 +170,9 @@ func (h BookHandler) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	book, err := repositories.BookRepository{}.Update(r, body)
+	id := mux.Vars(r)["id"]
+
+	book, err := repositories.BookRepository{}.Update(id, body)
 	if err != nil {
 		errors.SqlError(w, r, err)
 		return
