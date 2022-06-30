@@ -1,51 +1,53 @@
 package utils
 
-// import (
-// 	"encoding/json"
-// 	"fiber-starter/dto"
-// 	"strconv"
+import (
+	"encoding/json"
+	"go-starter/dto"
+	"net/http"
+	"strconv"
 
-// 	"github.com/gofiber/fiber/v2"
-// 	"golang.org/x/exp/slices"
-// )
+	"golang.org/x/exp/slices"
+)
 
-// func Pagination(c *fiber.Ctx) dto.Pagination {
-// 	limit, _ := strconv.Atoi(c.Query("limit"))
-// 	if limit < 1 || limit > 100 {
-// 		limit = 10
-// 	}
+func Pagination(r *http.Request) dto.Pagination {
+	query := r.URL.Query()
 
-// 	page, _ := strconv.Atoi(c.Query("page"))
-// 	if page < 1 {
-// 		page = 1
-// 	}
+	limit, _ := strconv.Atoi(query.Get("limit"))
+	if limit < 1 || limit > 100 {
+		limit = 10
+	}
 
-// 	keyword := c.Query("keyword")
+	page, _ := strconv.Atoi(query.Get("page"))
+	if page < 1 {
+		page = 1
+	}
 
-// 	filter := map[string]any{}
-// 	json.Unmarshal([]byte(c.Query("filter")), &filter)
+	keyword := r.URL.Query().Get("keyword")
 
-// 	var sort struct {
-// 		Field string
-// 		Order string
-// 	}
-// 	json.Unmarshal([]byte(c.Query("sort")), &sort)
-// 	if len(sort.Field) == 0 {
-// 		sort.Field = "id"
-// 	}
-// 	if !slices.Contains(
-// 		[]string{
-// 			"ASC",
-// 			"DESC",
-// 		}, sort.Order) {
-// 		sort.Order = "DESC"
-// 	}
+	filter := map[string]any{}
+	json.Unmarshal([]byte(query.Get("filter")), &filter)
 
-// 	return dto.Pagination{
-// 		Limit:   limit,
-// 		Offset:  limit * (page - 1),
-// 		Keyword: keyword,
-// 		Filter:  filter,
-// 		Order:   sort.Field + " " + sort.Order,
-// 	}
-// }
+	var sort struct {
+		Field string
+		Order string
+	}
+	json.Unmarshal([]byte(query.Get("sort")), &sort)
+	if len(sort.Field) == 0 {
+		sort.Field = "id"
+	}
+	if !slices.Contains(
+		[]string{
+			"ASC",
+			"DESC",
+		}, sort.Order) {
+		sort.Order = "DESC"
+	}
+
+	return dto.Pagination{
+		Limit:   limit,
+		Offset:  limit * (page - 1),
+		Keyword: keyword,
+		Filter:  filter,
+		Order:   sort.Field + " " + sort.Order,
+	}
+}

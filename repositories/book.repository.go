@@ -1,43 +1,46 @@
 package repositories
 
-// import (
-// 	"go-starter/entities"
+import (
+	"go-starter/dto"
+	"go-starter/entities"
+	"go-starter/utils"
+	"net/http"
 
-// 	"github.com/gofiber/fiber/v2"
-// 	"github.com/jinzhu/copier"
-// 	"gorm.io/gorm/clause"
-// )
+	"github.com/gorilla/mux"
+	"github.com/jinzhu/copier"
+	"gorm.io/gorm/clause"
+)
 
-// type BookRepository struct{}
+type BookRepository struct{}
 
-// func (r BookRepository) FindOneByID(id any) (book entities.Book, err error) {
-// 	err = CreateSqlBuilder(book).
-// 		Joins("User").
-// 		Where("book.id = ?", utils.ConvertToID(id)).
-// 		Take(&book).Error
-// 	return book, err
-// }
+func (r BookRepository) FindOneByID(id any) (book entities.Book, err error) {
+	err = CreateSqlBuilder(book).
+		Joins("User").
+		Where("book.id = ?", utils.ConvertToID(id)).
+		Take(&book).Error
+	return book, err
+}
 
-// func (r BookRepository) Create(body dto.CreateBookBody) (book entities.Book, err error) {
-// 	copier.Copy(&book, body)
-// 	err = CreateSqlBuilder(book).Create(&book).Error
-// 	return book, err
-// }
+func (r BookRepository) Create(body dto.CreateBookBody) (book entities.Book, err error) {
+	copier.Copy(&book, body)
+	err = CreateSqlBuilder(book).Create(&book).Error
+	return book, err
+}
 
-// func (r BookRepository) Update(c *fiber.Ctx, body dto.UpdateBookBody) (book entities.Book, err error) {
-// 	id := c.Params("id")
+func (r BookRepository) Update(_r *http.Request, body dto.UpdateBookBody) (book entities.Book, err error) {
+	id := mux.Vars(_r)["id"]
 
-// 	book, err = BookRepository{}.FindOneByID(id)
-// 	if err != nil {
-// 		return book, err
-// 	}
+	book, err = BookRepository{}.FindOneByID(id)
+	if err != nil {
+		return book, err
+	}
 
-// 	copier.Copy(&book, body)
-// 	err = CreateSqlBuilder(book).
-// 		Omit(clause.Associations). // skip auto create/update
-// 		Updates(utils.FilterRequestBody(c, body)).Error
-// 	return book, err
-// }
+	copier.Copy(&book, body)
+	err = CreateSqlBuilder(book).
+		Omit(clause.Associations). // skip auto create/update
+		Updates(utils.FilterRequestBody(_r, body)).Error
+	return book, err
+}
 
 // func (r BookRepository) Delete(id any) (err error) {
 // 	book, err := BookRepository{}.FindOneByID(id)

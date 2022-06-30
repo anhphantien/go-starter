@@ -10,11 +10,11 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-func ValidateRequestBody(r *http.Request, body any) []response.Error {
-	_body, _ := ioutil.ReadAll(r.Body)
-	json.Unmarshal([]byte(_body), body)
+func ValidateRequestBody(r *http.Request, payload any) []response.Error {
+	_payload, _ := ioutil.ReadAll(r.Body)
+	json.Unmarshal(_payload, payload)
 
-	if err := validator.New().Struct(body); err != nil {
+	if err := validator.New().Struct(payload); err != nil {
 		validationErrors := err.(validator.ValidationErrors)
 		errors := make([]response.Error, len(validationErrors))
 
@@ -37,14 +37,3 @@ func ValidateRequestBody(r *http.Request, body any) []response.Error {
 	}
 	return nil
 }
-
-// func FilterRequestBody(c *fiber.Ctx, body any) map[string]any {
-// 	dto := map[string]any{}
-// 	_dto, _ := json.Marshal(body)
-// 	json.Unmarshal(_dto, &dto)
-
-// 	rawBody := map[string]any{}
-// 	json.Unmarshal(c.Body(), &rawBody)
-
-// 	return lo.PickByKeys(rawBody, maps.Keys(dto))
-// }
