@@ -22,7 +22,6 @@ var (
 func Connect() {
 	dsn := username + ":" + password + "@tcp(" + host + ":" + port + ")/" + dbname + "?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=true"
 	fmt.Println(dsn)
-	log.Println(dsn)
 
 	db, err := gorm.Open(
 		mysql.Open(dsn),
