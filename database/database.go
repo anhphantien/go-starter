@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"go-starter/entities"
 	"go-starter/env"
 	"go-starter/repositories"
 	"log"
@@ -33,5 +34,7 @@ func Connect() {
 		log.Panic("Can't connect to database: ", err.Error())
 	}
 
-	repositories.Sync(db)
+	entities.Sync(db)
+
+	repositories.New(db)
 }

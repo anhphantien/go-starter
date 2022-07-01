@@ -1,18 +1,10 @@
 package repositories
 
-import (
-	"go-starter/entities"
-
-	"gorm.io/gorm"
-)
+import "gorm.io/gorm"
 
 var DB *gorm.DB
 
-func Sync(db *gorm.DB) {
-	db.AutoMigrate(
-		entities.Book{},
-		entities.User{},
-	)
+func New(db *gorm.DB) {
 	DB = db
 }
 
