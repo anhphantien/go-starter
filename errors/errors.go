@@ -31,6 +31,13 @@ func BadRequestException(w http.ResponseWriter, r *http.Request, err any) {
 	}
 }
 
+func UnauthorizedException(w http.ResponseWriter, r *http.Request, message string) {
+	response.WriteJSON(w, r, response.Response{
+		StatusCode: http.StatusUnauthorized,
+		Message:    message,
+	})
+}
+
 func NotFoundException(w http.ResponseWriter, r *http.Request, messages ...string) {
 	message := DATA_NOT_FOUND
 	if len(messages) > 0 {

@@ -188,14 +188,14 @@ func (h BookHandler) Update(w http.ResponseWriter, r *http.Request) {
 // @Success  200                object   response.Response{data=boolean}
 // @Router   /api/v1/books/{id} [DELETE]
 func (h BookHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	// user, err, ok := utils.GetCurrentUser(c)
-	// if !ok {
-	// 	return err
-	// }
+	_, err := utils.GetCurrentUser(w, r)
+	if err != nil {
+		return
+	}
 
 	id := mux.Vars(r)["id"]
 
-	err := bookRepository.Delete(id)
+	err = bookRepository.Delete(id)
 	if err != nil {
 		errors.SqlError(w, r, err)
 		return
