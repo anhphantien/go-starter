@@ -133,8 +133,7 @@ func (h BookHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 // @Router  /api/v1/books [POST]
 func (h BookHandler) Create(w http.ResponseWriter, r *http.Request) {
 	body := dto.CreateBookBody{}
-	if err := utils.ValidateRequestBody(r, &body); err != nil {
-		errors.BadRequestException(w, r, err)
+	if err := utils.ValidateRequestBody(w, r, &body); err != nil {
 		return
 	}
 
@@ -165,8 +164,7 @@ func (h BookHandler) Create(w http.ResponseWriter, r *http.Request) {
 // @Router  /api/v1/books/{id} [PUT]
 func (h BookHandler) Update(w http.ResponseWriter, r *http.Request) {
 	body := dto.UpdateBookBody{}
-	if err := utils.ValidateRequestBody(r, &body); err != nil {
-		errors.BadRequestException(w, r, err)
+	if err := utils.ValidateRequestBody(w, r, &body); err != nil {
 		return
 	}
 

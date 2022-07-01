@@ -25,8 +25,7 @@ type AuthHandler struct{}
 // @Router  /api/v1/auth/login [POST]
 func (h AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	body := dto.LoginBody{}
-	if err := utils.ValidateRequestBody(r, &body); err != nil {
-		errors.BadRequestException(w, r, err)
+	if err := utils.ValidateRequestBody(w, r, &body); err != nil {
 		return
 	}
 
