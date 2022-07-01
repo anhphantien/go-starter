@@ -24,4 +24,7 @@ func BookRouter(r *mux.Router) {
 
 	r.HandleFunc("/books/{id}", handlers.BookHandler{}.Update).
 		Methods(http.MethodPut)
+
+	r.HandleFunc("/books/{id}", handlers.BookHandler{}.Delete).
+		Methods(http.MethodDelete)
 }

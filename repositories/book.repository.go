@@ -38,12 +38,12 @@ func (r BookRepository) Update(id any, body dto.UpdateBookBody) (book entities.B
 	return book, err
 }
 
-// func (r BookRepository) Delete(id any) (err error) {
-// 	book, err := BookRepository{}.FindOneByID(id)
-// 	if err != nil {
-// 		return err
-// 	}
+func (r BookRepository) Delete(id any) (err error) {
+	book, err := BookRepository{}.FindOneByID(id)
+	if err != nil {
+		return err
+	}
 
-// 	err = CreateSqlBuilder(book).Delete(&book).Error
-// 	return err
-// }
+	err = CreateSqlBuilder(book).Delete(&book).Error
+	return err
+}

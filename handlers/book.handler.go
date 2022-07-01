@@ -183,24 +183,27 @@ func (h BookHandler) Update(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// // @Security Bearer
-// // @Summary  Delete a book
-// // @Tags     books
-// // @Param    id                 path     int true " "
-// // @Success  200                object   response.Response{data=boolean}
-// // @Router   /api/v1/books/{id} [DELETE]
-// func (h BookHandler) Delete(w http.ResponseWriter, r *http.Request) error {
-// 	// user, err, ok := utils.GetCurrentUser(c)
-// 	// if !ok {
-// 	// 	return err
-// 	// }
+// @Security Bearer
+// @Summary  Delete a book
+// @Tags     books
+// @Param    id                 path     int true " "
+// @Success  200                object   response.Response{data=boolean}
+// @Router   /api/v1/books/{id} [DELETE]
+func (h BookHandler) Delete(w http.ResponseWriter, r *http.Request) {
+	// user, err, ok := utils.GetCurrentUser(c)
+	// if !ok {
+	// 	return err
+	// }
 
-// 	id := c.Params("id")
+	id := mux.Vars(r)["id"]
 
-// 	err := repositories.BookRepository{}.Delete(id)
-// 	if err != nil {
-// 		return errors.SqlError(c, err)
-// 	}
+	err := repositories.BookRepository{}.Delete(id)
+	if err != nil {
+		errors.SqlError(w, r, err)
+		return
+	}
 
-// 	return response.WriteJSON(c, response.Response{})
-// }
+	response.WriteJSON(w, r, response.Response{
+		Data: true,
+	})
+}
