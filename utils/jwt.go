@@ -29,8 +29,8 @@ func GetCurrentUser(w http.ResponseWriter, r *http.Request) (models.CurrentUser,
 		ID:        uint64(claims["id"].(float64)),
 		Username:  claims["username"].(string),
 		Role:      claims["role"].(string),
-		IssuedAt:  claims["iat"].(*jwt.NumericDate),
-		ExpiresAt: claims["exp"].(*jwt.NumericDate),
+		IssuedAt:  int64(claims["iat"].(float64)),
+		ExpiresAt: int64(claims["exp"].(float64)),
 	}
 	// if ok := validateUserRole(c, user); !ok {
 	// 	return user, errors.ForbiddenException(c), false

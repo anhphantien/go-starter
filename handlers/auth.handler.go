@@ -54,12 +54,11 @@ func (h AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 	token, _ := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		models.CurrentUser{
-			ID:       user.ID,
-			Username: *user.Username,
-			Role:     *user.Role,
-			IssuedAt: jwt.NewNumericDate(time.Now()),
-			ExpiresAt: jwt.NewNumericDate(time.Now().
-				Add(time.Duration(env.JWT_EXPIRES_AT) * time.Second)),
+			ID:        user.ID,
+			Username:  *user.Username,
+			Role:      *user.Role,
+			IssuedAt:  time.Now().Unix(),
+			ExpiresAt: time.Now().Add(time.Duration(env.JWT_EXPIRES_AT) * time.Second).Unix(),
 		},
 	).SignedString(env.JWT_SECRET)
 
