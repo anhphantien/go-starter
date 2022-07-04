@@ -11,9 +11,9 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-type key string
+type key int
 
-const USER_KEY key = "user"
+var userKey key
 
 func JwtAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -28,7 +28,7 @@ func JwtAuth(next http.Handler) http.Handler {
 			return
 		}
 		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(),
-			USER_KEY, claims,
+			userKey, claims,
 		)))
 	})
 }

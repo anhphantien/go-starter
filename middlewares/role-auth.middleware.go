@@ -29,13 +29,12 @@ func RoleAuth(roles ...string) mux.MiddlewareFunc {
 func GetCurrentUser(w http.ResponseWriter, r *http.Request) (models.CurrentUser, bool) {
 	user := models.CurrentUser{}
 
-	value := r.Context().Value(USER_KEY)
-	if value == nil {
+	if r.Context().Value(userKey) == nil {
 		errors.UnauthorizedException(w, r)
 		return user, false
 	}
 
-	claims := value.(jwt.MapClaims)
+	claims := r.Context().Value(userKey).(jwt.MapClaims)
 	user = models.CurrentUser{
 		ID:        uint64(claims["id"].(float64)),
 		Username:  claims["username"].(string),
