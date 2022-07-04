@@ -13,11 +13,11 @@ var bookHandler = handlers.BookHandler{}
 
 func BookRouter(r *mux.Router) {
 	r.Use(
-		middlewares.JwtAuth,
-		middlewares.RoleAuth(
-			enums.User.Role.ADMIN,
-			enums.User.Role.USER,
-		),
+	// middlewares.JwtAuth,
+	// middlewares.RoleAuth(
+	// 	enums.User.Role.ADMIN,
+	// 	enums.User.Role.USER,
+	// ),
 	)
 
 	r.HandleFunc("/books", bookHandler.GetList).
@@ -33,16 +33,16 @@ func BookRouter(r *mux.Router) {
 		Methods(http.MethodPut)
 
 	r.HandleFunc("/books/{id}",
-		// middlewares.NewChain(
-		// 	middlewares.JwtAuth,
-		// 	middlewares.UserRoles(
-		// 		enums.User.Role.ADMIN,
-		// 		enums.User.Role.USER,
-		// 	),
-		// ).Then(
-		// 	bookHandler.Delete,
-		// ),
-		bookHandler.Delete,
+		middlewares.NewChain(
+			middlewares.JwtAuth,
+			middlewares.RoleAuth(
+				// enums.User.Role.ADMIN,
+				enums.User.Role.USER,
+			),
+		).Then(
+			bookHandler.Delete,
+		),
+		// bookHandler.Delete,
 	).
 		Methods(http.MethodDelete)
 }
