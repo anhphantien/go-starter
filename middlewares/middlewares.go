@@ -3,23 +3,22 @@ package middlewares
 import (
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/samber/lo"
 )
 
-type middleware func(http.Handler) http.Handler
+type middlewareChain []mux.MiddlewareFunc
 
-type middlewareChain []middleware
-
-func NewChain(middlewares ...middleware) middlewareChain {
-	return lo.Reverse(middlewares)
+func NewChain(middlewareFuncs ...mux.MiddlewareFunc) middlewareChain {
+	return lo.Reverse(middlewareFuncs)
 }
 
-func (c middlewareChain) Then(h http.HandlerFunc) http.HandlerFunc {
-	for _, m := range c {
-		if m == nil {
-			return h
+func (c middlewareChain) Then(handler http.HandlerFunc) http.HandlerFunc {
+	for _, middleware := range c {
+		if middleware == nil {
+			return handler
 		}
-		h = m(h).ServeHTTP
+		handler = middleware(handler).ServeHTTP
 	}
-	return h
+	return handler
 }
