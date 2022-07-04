@@ -12,12 +12,12 @@ import (
 var bookHandler = handlers.BookHandler{}
 
 func BookRouter(r *mux.Router) {
-	r.Use(
-	// middlewares.JwtAuth,
-	// middlewares.RoleAuth(
-	// 	enums.User.Role.ADMIN,
-	// 	enums.User.Role.USER,
-	// ),
+	r.PathPrefix("").Subrouter().Use(
+		middlewares.JwtAuth,
+		middlewares.RoleAuth(
+			enums.User.Role.ADMIN,
+			enums.User.Role.USER,
+		),
 	)
 
 	r.HandleFunc("/books", bookHandler.GetList).
