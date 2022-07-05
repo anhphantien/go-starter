@@ -30,4 +30,5 @@ func apiGroup(r *mux.Router, prefix string) {
 	s := r.PathPrefix(prefix).Subrouter()
 	AuthRouter(s)
 	BookRouter(s)
+	FileRouter(s)
 }

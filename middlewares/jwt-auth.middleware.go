@@ -4,6 +4,7 @@ import (
 	"context"
 	"go-starter/env"
 	"go-starter/errors"
+	"go-starter/models"
 	"net/http"
 	"regexp"
 	"strings"
@@ -19,7 +20,17 @@ const (
 
 func JwtAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		claims, err := verifyToken(r)
+		tokenString := r.Header.Get("Authorization")
+		if strings.HasPrefix(tokenString, "Bearer ") || strings.HasPrefix(tokenString, "bearer ") {
+			tokenString = regexp.MustCompile(`[B|b]earer\s+`).ReplaceAllString(tokenString, "")
+		}
+
+		claims := jwt.MapClaims{}
+		_, err := jwt.ParseWithClaims(tokenString, claims,
+			func(token *jwt.Token) (any, error) {
+				return []byte(env.JWT_SECRET), nil
+			},
+		)
 		if err != nil {
 			switch strings.ToLower(err.Error()) {
 			case jwt.ErrTokenExpired.Error():
@@ -29,24 +40,28 @@ func JwtAuth(next http.Handler) http.Handler {
 			}
 			return
 		}
+
 		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(),
 			userKey, claims,
 		)))
 	})
 }
 
-func verifyToken(r *http.Request) (jwt.MapClaims, error) {
-	tokenString := r.Header.Get("Authorization")
-	if strings.HasPrefix(tokenString, "Bearer ") || strings.HasPrefix(tokenString, "bearer ") {
-		tokenString = regexp.MustCompile(`[B|b]earer\s+`).ReplaceAllString(tokenString, "")
+func GetCurrentUser(w http.ResponseWriter, r *http.Request) (models.CurrentUser, bool) {
+	user := models.CurrentUser{}
+
+	if r.Context().Value(userKey) == nil {
+		errors.UnauthorizedException(w, r)
+		return user, false
 	}
 
-	claims := jwt.MapClaims{}
-	_, err := jwt.ParseWithClaims(tokenString, claims,
-		func(token *jwt.Token) (any, error) {
-			return []byte(env.JWT_SECRET), nil
-		},
-	)
-
-	return claims, err
+	claims := r.Context().Value(userKey).(jwt.MapClaims)
+	user = models.CurrentUser{
+		ID:        uint64(claims["id"].(float64)),
+		Username:  claims["username"].(string),
+		Role:      claims["role"].(string),
+		IssuedAt:  int64(claims["iat"].(float64)),
+		ExpiresAt: int64(claims["exp"].(float64)),
+	}
+	return user, true
 }
