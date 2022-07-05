@@ -30,12 +30,12 @@ func (h AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user := entities.User{}
-	result := repositories.
+	err := repositories.
 		CreateSqlBuilder(user).
 		Where("username = ?", body.Username).
-		Take(&user)
-	if result.Error != nil {
-		errors.SqlError(w, r, result.Error)
+		Take(&user).Error
+	if err != nil {
+		errors.SqlError(w, r, err)
 		return
 	}
 	if err := bcrypt.
