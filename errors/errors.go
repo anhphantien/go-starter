@@ -66,6 +66,17 @@ func NotFoundException(w http.ResponseWriter, r *http.Request, messages ...strin
 	})
 }
 
+func PayloadTooLargeException(w http.ResponseWriter, r *http.Request, messages ...string) {
+	message := PAYLOAD_TOO_LARGE
+	if len(messages) > 0 {
+		message = messages[0]
+	}
+	response.WriteJSON(w, r, response.Response{
+		StatusCode: http.StatusRequestEntityTooLarge,
+		Message:    message,
+	})
+}
+
 func InternalServerErrorException(w http.ResponseWriter, r *http.Request, message string) {
 	response.WriteJSON(w, r, response.Response{
 		StatusCode: http.StatusInternalServerError,
