@@ -23,7 +23,7 @@ func (h FileHandler) Upload(w http.ResponseWriter, r *http.Request) {
 		case http.ErrMissingBoundary:
 			errors.BadRequestException(w, r, errors.FILE_NOT_FOUND)
 		default:
-			errors.BadRequestException(w, r, err)
+			errors.BadRequestException(w, r, err.Error())
 		}
 		return
 	}
