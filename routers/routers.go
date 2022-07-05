@@ -10,13 +10,13 @@ import (
 
 func New() *mux.Router {
 	r := mux.NewRouter()
-	swaggerInit(r)
+	swaggerInit(r, "/swagger")
 	apiGroup(r, "/api/v1")
 	return r
 }
 
-func swaggerInit(r *mux.Router) {
-	r.HandleFunc("/swagger", func(w http.ResponseWriter, r *http.Request) {
+func swaggerInit(r *mux.Router, prefix string) {
+	r.HandleFunc(prefix, func(w http.ResponseWriter, r *http.Request) {
 		var scheme string
 		if r.TLS == nil {
 			scheme = "http"
@@ -25,7 +25,7 @@ func swaggerInit(r *mux.Router) {
 		}
 		http.Redirect(w, r, scheme+"://"+path.Join(r.Host, r.URL.Path, "index.html"), http.StatusMovedPermanently)
 	})
-	r.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
+	r.PathPrefix(prefix).HandlerFunc(httpSwagger.WrapHandler)
 }
 
 func apiGroup(r *mux.Router, prefix string) {
