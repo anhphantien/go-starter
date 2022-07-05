@@ -29,12 +29,12 @@ type Model interface {
 func GetAllColumnsOfTable(model Model) string {
 	s := []string{}
 
-	r := regexp.MustCompile(`column:\w+`)
+	regexp := regexp.MustCompile(`column:\w+`)
 
 	t := reflect.TypeOf(model)
 	for i := 0; i < t.NumField(); i++ {
 		column := strings.ReplaceAll(
-			r.FindString(t.Field(i).Tag.Get("gorm")),
+			regexp.FindString(t.Field(i).Tag.Get("gorm")),
 			"column:", "",
 		)
 		if len(column) > 0 {
