@@ -17,10 +17,8 @@ func New() *mux.Router {
 
 func swaggerInit(r *mux.Router, prefix string) {
 	r.HandleFunc(prefix, func(w http.ResponseWriter, r *http.Request) {
-		var scheme string
-		if r.TLS == nil {
-			scheme = "http"
-		} else {
+		scheme := "http"
+		if r.TLS != nil {
 			scheme = "https"
 		}
 		http.Redirect(w, r, scheme+"://"+path.Join(r.Host, r.URL.Path, "index.html"), http.StatusMovedPermanently)
