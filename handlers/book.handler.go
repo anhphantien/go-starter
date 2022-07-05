@@ -115,9 +115,8 @@ func (h BookHandler) GetList(w http.ResponseWriter, r *http.Request) {
 func (h BookHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
-	book, err := bookRepository.FindOneByID(id)
+	book, err := bookRepository.FindOneByID(w, r, id)
 	if err != nil {
-		errors.SqlError(w, r, err)
 		return
 	}
 
@@ -138,16 +137,14 @@ func (h BookHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if body.UserID != nil {
-		_, err := userRepository.FindOneByID(body.UserID)
+		_, err := userRepository.FindOneByID(w, r, body.UserID)
 		if err != nil {
-			errors.SqlError(w, r, err)
 			return
 		}
 	}
 
-	book, err := bookRepository.Create(body)
+	book, err := bookRepository.Create(w, r, body)
 	if err != nil {
-		errors.SqlError(w, r, err)
 		return
 	}
 
@@ -170,9 +167,8 @@ func (h BookHandler) Update(w http.ResponseWriter, r *http.Request) {
 
 	id := mux.Vars(r)["id"]
 
-	book, err := bookRepository.Update(id, body)
+	book, err := bookRepository.Update(w, r, id, body)
 	if err != nil {
-		errors.SqlError(w, r, err)
 		return
 	}
 
@@ -195,9 +191,8 @@ func (h BookHandler) Delete(w http.ResponseWriter, r *http.Request) {
 
 	id := mux.Vars(r)["id"]
 
-	err := bookRepository.Delete(id)
+	err := bookRepository.Delete(w, r, id)
 	if err != nil {
-		errors.SqlError(w, r, err)
 		return
 	}
 

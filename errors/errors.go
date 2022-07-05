@@ -31,15 +31,15 @@ func BadRequestException(w http.ResponseWriter, r *http.Request, err any) {
 	}
 }
 
-func UnauthorizedException(w http.ResponseWriter, r *http.Request, message ...string) {
-	if len(message) == 0 {
+func UnauthorizedException(w http.ResponseWriter, r *http.Request, messages ...string) {
+	if len(messages) == 0 {
 		response.WriteJSON(w, r, response.Response{
 			StatusCode: http.StatusUnauthorized,
 		})
 	} else {
 		response.WriteJSON(w, r, response.Response{
 			StatusCode: http.StatusUnauthorized,
-			Message:    message[0],
+			Message:    messages[0],
 		})
 	}
 }

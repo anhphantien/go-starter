@@ -9,5 +9,5 @@ type CurrentUser struct {
 }
 
 func (CurrentUser) Valid() (err error) {
-	return err
+	return
 }

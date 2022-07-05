@@ -3,7 +3,9 @@ package repositories
 import (
 	"go-starter/dto"
 	"go-starter/entities"
+	"go-starter/errors"
 	"go-starter/utils"
+	"net/http"
 
 	"github.com/jinzhu/copier"
 	"gorm.io/gorm/clause"
@@ -11,39 +13,52 @@ import (
 
 type BookRepository struct{}
 
-func (r BookRepository) FindOneByID(id any) (book entities.Book, err error) {
+func (repository BookRepository) FindOneByID(w http.ResponseWriter, r *http.Request, id any) (book entities.Book, err error) {
 	err = CreateSqlBuilder(book).
 		Joins("User").
 		Where("book.id = ?", utils.ConvertToID(id)).
 		Take(&book).Error
-	return book, err
+	if err != nil {
+		errors.SqlError(w, r, err)
+	}
+	return
 }
 
-func (r BookRepository) Create(body dto.CreateBookBody) (book entities.Book, err error) {
+func (repository BookRepository) Create(w http.ResponseWriter, r *http.Request,
+	body dto.CreateBookBody) (book entities.Book, err error) {
 	copier.Copy(&book, body)
 	err = CreateSqlBuilder(book).Create(&book).Error
-	return book, err
+	if err != nil {
+		errors.SqlError(w, r, err)
+	}
+	return
 }
 
-func (r BookRepository) Update(id any, body dto.UpdateBookBody) (book entities.Book, err error) {
-	book, err = BookRepository{}.FindOneByID(id)
+func (repository BookRepository) Update(w http.ResponseWriter, r *http.Request, id any, body dto.UpdateBookBody) (book entities.Book, err error) {
+	book, err = repository.FindOneByID(w, r, id)
 	if err != nil {
-		return book, err
+		return
 	}
 
 	copier.Copy(&book, body)
 	err = CreateSqlBuilder(book).
 		Omit(clause.Associations). // skip auto create/update
 		Updates(utils.ConvertToMap(body)).Error
-	return book, err
+	if err != nil {
+		errors.SqlError(w, r, err)
+	}
+	return
 }
 
-func (r BookRepository) Delete(id any) (err error) {
-	book, err := BookRepository{}.FindOneByID(id)
+func (repository BookRepository) Delete(w http.ResponseWriter, r *http.Request, id any) (err error) {
+	book, err := repository.FindOneByID(w, r, id)
 	if err != nil {
 		return err
 	}
 
 	err = CreateSqlBuilder(book).Delete(&book).Error
-	return err
+	if err != nil {
+		errors.SqlError(w, r, err)
+	}
+	return
 }

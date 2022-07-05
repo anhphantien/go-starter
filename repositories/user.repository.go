@@ -2,14 +2,19 @@ package repositories
 
 import (
 	"go-starter/entities"
+	"go-starter/errors"
 	"go-starter/utils"
+	"net/http"
 )
 
 type UserRepository struct{}
 
-func (r UserRepository) FindOneByID(id any) (user entities.User, err error) {
+func (repository UserRepository) FindOneByID(w http.ResponseWriter, r *http.Request, id any) (user entities.User, err error) {
 	err = CreateSqlBuilder(user).
 		Where("id = ?", utils.ConvertToID(id)).
 		Take(&user).Error
-	return user, err
+	if err != nil {
+		errors.SqlError(w, r, err)
+	}
+	return
 }
