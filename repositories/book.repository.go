@@ -53,7 +53,7 @@ func (repository BookRepository) Update(w http.ResponseWriter, r *http.Request, 
 func (repository BookRepository) Delete(w http.ResponseWriter, r *http.Request, id any) (err error) {
 	book, err := repository.FindOneByID(w, r, id)
 	if err != nil {
-		return err
+		return
 	}
 
 	err = CreateSqlBuilder(book).Delete(&book).Error
