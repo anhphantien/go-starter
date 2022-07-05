@@ -24,8 +24,7 @@ func (repository BookRepository) FindOneByID(w http.ResponseWriter, r *http.Requ
 	return
 }
 
-func (repository BookRepository) Create(w http.ResponseWriter, r *http.Request,
-	body dto.CreateBookBody) (book entities.Book, err error) {
+func (repository BookRepository) Create(w http.ResponseWriter, r *http.Request, body dto.CreateBookBody) (book entities.Book, err error) {
 	copier.Copy(&book, body)
 	err = CreateSqlBuilder(book).Create(&book).Error
 	if err != nil {
