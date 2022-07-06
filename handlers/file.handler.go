@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"fmt"
 	"go-starter/config"
 	"go-starter/errors"
+	"go-starter/response"
 	"net/http"
 
 	"golang.org/x/exp/slices"
@@ -14,10 +14,10 @@ type FileHandler struct{}
 // @Tags    file
 // @Summary Upload a file
 // @Param   file                formData file false " "
-// @Success 201                 object   response.Response{}
+// @Success 201                 object   response.Response{data=boolean}
 // @Router  /api/v1/file/upload [POST]
 func (h FileHandler) Upload(w http.ResponseWriter, r *http.Request) {
-	file, fileHeader, err := r.FormFile("file")
+	_, fileHeader, err := r.FormFile("file")
 	if err != nil {
 		switch err {
 		case http.ErrMissingBoundary:
@@ -42,5 +42,13 @@ func (h FileHandler) Upload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(file, fileHeader.Filename)
+	// stream, _ := fileHeader.Open()
+	// buffer := make([]byte, fileHeader.Size)
+	// stream.Read(buffer)
+	// file, _ := os.Create("./" + fileHeader.Filename)
+	// file.Write(buffer)
+
+	response.WriteJSON(w, r, response.Response{
+		Data: true,
+	})
 }
