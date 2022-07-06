@@ -5,7 +5,6 @@ import (
 	"go-starter/errors"
 	"go-starter/response"
 	"net/http"
-	"os"
 
 	"golang.org/x/exp/slices"
 )
@@ -18,7 +17,7 @@ type FileHandler struct{}
 // @Success 201                 object   response.Response{data=boolean}
 // @Router  /api/v1/file/upload [POST]
 func (h FileHandler) Upload(w http.ResponseWriter, r *http.Request) {
-	file, fileHeader, err := r.FormFile("file")
+	_, fileHeader, err := r.FormFile("file")
 	if err != nil {
 		switch err {
 		case http.ErrMissingBoundary:
@@ -43,10 +42,10 @@ func (h FileHandler) Upload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	buffer := make([]byte, fileHeader.Size)
-	file.Read(buffer)
-	fileOutput, _ := os.Create("./" + fileHeader.Filename)
-	fileOutput.Write(buffer)
+	// buffer := make([]byte, fileHeader.Size)
+	// file.Read(buffer)
+	// f, _ := os.Create("./" + fileHeader.Filename)
+	// f.Write(buffer)
 
 	response.WriteJSON(w, r, response.Response{
 		Data: true,
