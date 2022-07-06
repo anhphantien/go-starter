@@ -119,7 +119,7 @@ func (h BookHandler) GetList(w http.ResponseWriter, r *http.Request) {
 func (h BookHandler) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 
-	book, err := bookRepository.FindOneByID(w, r, id)
+	book, err := bookRepository.FindByID(w, r, id)
 	if err != nil {
 		return
 	}
@@ -141,7 +141,7 @@ func (h BookHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if body.UserID != nil {
-		_, err := userRepository.FindOneByID(w, r, body.UserID)
+		_, err := userRepository.FindByID(w, r, body.UserID)
 		if err != nil {
 			return
 		}
