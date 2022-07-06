@@ -11,12 +11,10 @@ type UserStatus struct {
 	IS_DISABLED   string
 }
 
-type _User struct {
+var User = struct {
 	Role   UserRole
 	Status UserStatus
-}
-
-var User = _User{
+}{
 	Role: UserRole{
 		ADMIN: "ADMIN",
 		USER:  "USER",
