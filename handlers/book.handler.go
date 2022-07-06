@@ -4,16 +4,13 @@ import (
 	"database/sql"
 	"go-starter/dto"
 	"go-starter/entities"
-	"go-starter/errors"
 	"go-starter/models"
 	"go-starter/repositories"
 	"go-starter/response"
 	"go-starter/utils"
 	"net/http"
-	"sync"
 
 	"github.com/gorilla/mux"
-	"gorm.io/gorm"
 )
 
 type BookHandler struct{}
@@ -43,6 +40,13 @@ func (h BookHandler) GetList(w http.ResponseWriter, r *http.Request) {
 			sql.Named("keyword", "%"+pagination.Keyword+"%"),
 		)
 	}
+	q.Limit(pagination.Limit).
+		Offset(pagination.Offset).
+		Order(pagination.Order)
+	books, total, err := bookRepository.FindAndCount(w, r, q)
+	if err != nil {
+		return
+	}
 
 	// var err error
 
@@ -62,46 +66,6 @@ func (h BookHandler) GetList(w http.ResponseWriter, r *http.Request) {
 	// 	errors.SqlError(w, r, err)
 	// 	return
 	// }
-
-	ch := make(chan error, 2)
-	wg := sync.WaitGroup{}
-	wg.Add(2)
-
-	var total int64
-	go func() {
-		defer wg.Done()
-
-		err := q.
-			Session(&gorm.Session{}). // clone
-			Count(&total).Error
-		if err != nil {
-			ch <- err
-		}
-	}()
-
-	go func() {
-		defer wg.Done()
-
-		err := q.
-			Session(&gorm.Session{}). // clone
-			Limit(pagination.Limit).
-			Offset(pagination.Offset).
-			Order(pagination.Order).
-			Find(&books).Error
-		if err != nil {
-			ch <- err
-		}
-	}()
-
-	wg.Wait()
-	close(ch)
-
-	for err := range ch {
-		if err != nil {
-			errors.SqlError(w, r, err)
-			return
-		}
-	}
 
 	response.WriteJSON(w, r, response.Response{
 		Data: models.PaginationResponse{

@@ -6,20 +6,49 @@ import (
 	"go-starter/errors"
 	"go-starter/utils"
 	"net/http"
+	"sync"
 
 	"github.com/jinzhu/copier"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 type BookRepository struct{}
 
-func (repository BookRepository) Find(w http.ResponseWriter, r *http.Request, id any) (book entities.Book, err error) {
-	err = CreateSqlBuilder(book).
-		Joins("User").
-		Where("book.id = ?", utils.ConvertToID(id)).
-		Take(&book).Error
-	if err != nil {
-		errors.SqlError(w, r, err)
+func (repository BookRepository) FindAndCount(w http.ResponseWriter, r *http.Request, q *gorm.DB) (books []entities.Book, total int64, err error) {
+	ch := make(chan error, 2)
+	wg := sync.WaitGroup{}
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+
+		err := q.
+			Session(&gorm.Session{}). // clone
+			Count(&total).Error
+		if err != nil {
+			ch <- err
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+
+		err := q.
+			Session(&gorm.Session{}). // clone
+			Find(&books).Error
+		if err != nil {
+			ch <- err
+		}
+	}()
+
+	wg.Wait()
+	close(ch)
+
+	for err = range ch {
+		if err != nil {
+			errors.SqlError(w, r, err)
+		}
 	}
 	return
 }
