@@ -20,9 +20,11 @@ const (
 
 func JwtAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		regexp := regexp.MustCompile(`[B|b]earer\s+`)
+
 		tokenString := r.Header.Get("Authorization")
-		if strings.HasPrefix(tokenString, "Bearer ") || strings.HasPrefix(tokenString, "bearer ") {
-			tokenString = regexp.MustCompile(`[B|b]earer\s+`).ReplaceAllString(tokenString, "")
+		if regexp.Match([]byte(tokenString)) {
+			tokenString = regexp.ReplaceAllString(tokenString, "")
 		}
 
 		claims := jwt.MapClaims{}
