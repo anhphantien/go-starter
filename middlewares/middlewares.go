@@ -13,8 +13,8 @@ func NewChain(middlewareFuncs ...mux.MiddlewareFunc) middlewareChain {
 	return lo.Reverse(middlewareFuncs)
 }
 
-func (c middlewareChain) Then(handler http.HandlerFunc) http.HandlerFunc {
-	for _, middleware := range c {
+func (chain middlewareChain) Then(handler http.HandlerFunc) http.HandlerFunc {
+	for _, middleware := range chain {
 		if middleware == nil {
 			return handler
 		}
