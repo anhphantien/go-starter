@@ -22,7 +22,7 @@ type Model interface {
 // q1 := q.Session(&gorm.Session{})...
 // q2 := q.Session(&gorm.Session{})...
 
-// DB.Table("book"). // table has no model structure
+// DB.Table("book"). // for tables without model structure
 // 	Select("1 + 2 AS sum, \"abc\" AS title").
 // 	Scan(&books)
 
