@@ -25,10 +25,9 @@ type BookHandler struct{}
 // @Success 200           object response.Response{data=[]entities.Book}
 // @Router  /api/v1/books [GET]
 func (h BookHandler) GetList(w http.ResponseWriter, r *http.Request) {
-	books := []entities.Book{}
-
 	pagination := utils.Pagination(r)
 
+	books := []entities.Book{}
 	q := repositories.CreateSqlBuilder(books).
 		Preload("User")
 	if pagination.Filter["id"] != nil {

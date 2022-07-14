@@ -22,7 +22,7 @@ func Pagination(r *http.Request) dto.Pagination {
 		page = 1
 	}
 
-	keyword := r.URL.Query().Get("keyword")
+	keyword := query.Get("keyword")
 
 	filter := map[string]any{}
 	json.Unmarshal([]byte(query.Get("filter")), &filter)
