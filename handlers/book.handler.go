@@ -151,7 +151,7 @@ func (h BookHandler) Update(w http.ResponseWriter, r *http.Request) {
 // @Success  200                object   response.Response{data=boolean}
 // @Router   /api/v1/books/{id} [DELETE]
 func (h BookHandler) Delete(w http.ResponseWriter, r *http.Request) {
-	// user, ok := middlewares.GetCurrentUser(w, r)
+	// currentUser, ok := middlewares.GetCurrentUser(w, r)
 	// if !ok {
 	// 	return
 	// }

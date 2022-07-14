@@ -50,20 +50,20 @@ func JwtAuth(next http.Handler) http.Handler {
 }
 
 func GetCurrentUser(w http.ResponseWriter, r *http.Request) (models.CurrentUser, bool) {
-	user := models.CurrentUser{}
+	currentUser := models.CurrentUser{}
 
 	if r.Context().Value(userKey) == nil {
 		errors.UnauthorizedException(w, r)
-		return user, false
+		return currentUser, false
 	}
 
 	claims := r.Context().Value(userKey).(jwt.MapClaims)
-	user = models.CurrentUser{
+	currentUser = models.CurrentUser{
 		ID:        uint64(claims["id"].(float64)),
 		Username:  claims["username"].(string),
 		Role:      claims["role"].(string),
 		IssuedAt:  int64(claims["iat"].(float64)),
 		ExpiresAt: int64(claims["exp"].(float64)),
 	}
-	return user, true
+	return currentUser, true
 }
