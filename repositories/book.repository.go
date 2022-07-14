@@ -53,7 +53,7 @@ func (repository BookRepository) FindAndCount(w http.ResponseWriter, r *http.Req
 	return
 }
 
-func (repository BookRepository) FindByID(w http.ResponseWriter, r *http.Request, id any) (book entities.Book, err error) {
+func (repository BookRepository) FindOneByID(w http.ResponseWriter, r *http.Request, id any) (book entities.Book, err error) {
 	err = CreateSqlBuilder(book).
 		Joins("User").
 		Where("book.id = ?", utils.ConvertToID(id)).
@@ -74,7 +74,7 @@ func (repository BookRepository) Create(w http.ResponseWriter, r *http.Request, 
 }
 
 func (repository BookRepository) Update(w http.ResponseWriter, r *http.Request, id any, body dto.UpdateBookBody) (book entities.Book, err error) {
-	book, err = repository.FindByID(w, r, id)
+	book, err = repository.FindOneByID(w, r, id)
 	if err != nil {
 		return
 	}
@@ -90,7 +90,7 @@ func (repository BookRepository) Update(w http.ResponseWriter, r *http.Request, 
 }
 
 func (repository BookRepository) Delete(w http.ResponseWriter, r *http.Request, id any) (err error) {
-	book, err := repository.FindByID(w, r, id)
+	book, err := repository.FindOneByID(w, r, id)
 	if err != nil {
 		return
 	}

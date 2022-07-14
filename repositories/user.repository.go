@@ -9,7 +9,7 @@ import (
 
 type UserRepository struct{}
 
-func (repository UserRepository) FindByID(w http.ResponseWriter, r *http.Request, id any) (user entities.User, err error) {
+func (repository UserRepository) FindOneByID(w http.ResponseWriter, r *http.Request, id any) (user entities.User, err error) {
 	err = CreateSqlBuilder(user).
 		Where("id = ?", utils.ConvertToID(id)).
 		Take(&user).Error
