@@ -28,19 +28,19 @@ func Pagination(r *http.Request) dto.Pagination {
 	json.Unmarshal([]byte(query.Get("filter")), &filter)
 
 	var sort struct {
-		Field string
-		Order string
+		By        string
+		Direction string
 	}
 	json.Unmarshal([]byte(query.Get("sort")), &sort)
-	if len(sort.Field) == 0 {
-		sort.Field = "id"
+	if len(sort.By) == 0 {
+		sort.By = "id"
 	}
 	if !slices.Contains(
 		[]string{
 			"ASC",
 			"DESC",
-		}, sort.Order) {
-		sort.Order = "DESC"
+		}, sort.Direction) {
+		sort.Direction = "DESC"
 	}
 
 	return dto.Pagination{
@@ -48,6 +48,6 @@ func Pagination(r *http.Request) dto.Pagination {
 		Offset:  limit * (page - 1),
 		Keyword: keyword,
 		Filter:  filter,
-		Order:   sort.Field + " " + sort.Order,
+		Order:   sort.By + " " + sort.Direction,
 	}
 }
