@@ -31,7 +31,7 @@ func Connect() {
 		},
 	)
 	if err != nil {
-		log.Panic("Can't connect to database: ", err.Error())
+		log.Panic("Can't connect to database: ", err)
 	}
 
 	entities.Sync(db)

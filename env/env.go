@@ -1,6 +1,7 @@
 package env
 
 import (
+	"log"
 	"time"
 
 	"github.com/spf13/viper"
@@ -21,7 +22,9 @@ var (
 
 func init() {
 	viper.SetConfigFile(".env")
-	viper.ReadInConfig()
+	if err := viper.ReadInConfig(); err != nil {
+		log.Panic(err)
+	}
 
 	PORT = viper.GetString("PORT")
 
