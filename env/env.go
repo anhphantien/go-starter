@@ -1,7 +1,7 @@
 package env
 
 import (
-	"strconv"
+	"time"
 
 	"github.com/spf13/viper"
 )
@@ -15,7 +15,7 @@ var (
 	DB_PORT string
 	DB_NAME string
 
-	JWT_EXPIRES_AT int
+	JWT_EXPIRES_AT time.Duration
 	JWT_SECRET     []byte
 )
 
@@ -31,6 +31,6 @@ func init() {
 	DB_PORT = viper.GetString("DB_PORT")
 	DB_NAME = viper.GetString("DB_NAME")
 
-	JWT_EXPIRES_AT, _ = strconv.Atoi(viper.GetString("JWT_EXPIRES_AT"))
+	JWT_EXPIRES_AT = time.Duration(viper.GetInt("JWT_EXPIRES_AT"))
 	JWT_SECRET = []byte(viper.GetString("JWT_SECRET"))
 }

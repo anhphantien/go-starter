@@ -30,7 +30,7 @@ func JwtAuth(next http.Handler) http.Handler {
 		claims := jwt.MapClaims{}
 		_, err := jwt.ParseWithClaims(tokenString, claims,
 			func(token *jwt.Token) (any, error) {
-				return []byte(env.JWT_SECRET), nil
+				return env.JWT_SECRET, nil
 			},
 		)
 		if err != nil {
