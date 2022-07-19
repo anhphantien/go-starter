@@ -12,27 +12,29 @@ import (
 var bookHandler = handlers.BookHandler{}
 
 func BookRouter(r *mux.Router) {
-	r.PathPrefix("").Subrouter().Use(
-		middlewares.JwtAuth,
-		middlewares.RoleAuth(
-			enums.User.Role.ADMIN,
-			enums.User.Role.USER,
-		),
-	)
+	s := r.PathPrefix("").Subrouter()
 
-	r.HandleFunc("/books", bookHandler.GetList).
+	// s.Use(
+	// 	middlewares.JwtAuth,
+	// 	middlewares.RoleAuth(
+	// 		enums.User.Role.ADMIN,
+	// 		enums.User.Role.USER,
+	// 	),
+	// )
+
+	s.HandleFunc("/books", bookHandler.GetList).
 		Methods(http.MethodGet)
 
-	r.HandleFunc("/books/{id}", bookHandler.GetByID).
+	s.HandleFunc("/books/{id}", bookHandler.GetByID).
 		Methods(http.MethodGet)
 
-	r.HandleFunc("/books", bookHandler.Create).
+	s.HandleFunc("/books", bookHandler.Create).
 		Methods(http.MethodPost)
 
-	r.HandleFunc("/books/{id}", bookHandler.Update).
+	s.HandleFunc("/books/{id}", bookHandler.Update).
 		Methods(http.MethodPut)
 
-	r.HandleFunc("/books/{id}",
+	s.HandleFunc("/books/{id}",
 		middlewares.NewChain(
 			middlewares.JwtAuth,
 			middlewares.RoleAuth(
@@ -42,7 +44,6 @@ func BookRouter(r *mux.Router) {
 		).Then(
 			bookHandler.Delete,
 		),
-		// bookHandler.Delete,
 	).
 		Methods(http.MethodDelete)
 }

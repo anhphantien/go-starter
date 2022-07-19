@@ -10,6 +10,8 @@ import (
 var fileHandler = handlers.FileHandler{}
 
 func FileRouter(r *mux.Router) {
-	r.HandleFunc("/file/upload", fileHandler.Upload).
+	s := r.PathPrefix("").Subrouter()
+
+	s.HandleFunc("/file/upload", fileHandler.Upload).
 		Methods(http.MethodPost)
 }
