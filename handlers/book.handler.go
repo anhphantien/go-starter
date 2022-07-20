@@ -22,7 +22,7 @@ type BookHandler struct{}
 // @Param   keyword       query  string false " "
 // @Param   filter        query  object false " "
 // @Param   sort          query  object false " "
-// @Success 200           object response.Response{data=[]entities.Book}
+// @Success 200           object response.Response{data=models.PaginationResponse{items=[]entities.Book,total=number}}
 // @Router  /api/v1/books [GET]
 func (h BookHandler) GetList(w http.ResponseWriter, r *http.Request) {
 	pagination := utils.Pagination(r)
