@@ -52,12 +52,12 @@ func JwtAuth(next http.Handler) http.Handler {
 func GetCurrentUser(w http.ResponseWriter, r *http.Request) (models.CurrentUser, bool) {
 	currentUser := models.CurrentUser{}
 
-	if r.Context().Value(userKey) == nil {
+	claims, ok := r.Context().Value(userKey).(jwt.MapClaims)
+	if !ok {
 		errors.UnauthorizedException(w, r)
 		return currentUser, false
 	}
 
-	claims := r.Context().Value(userKey).(jwt.MapClaims)
 	currentUser = models.CurrentUser{
 		ID:        uint64(claims["id"].(float64)),
 		Username:  claims["username"].(string),
