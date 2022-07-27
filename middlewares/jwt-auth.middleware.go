@@ -14,9 +14,7 @@ import (
 
 type key int
 
-const (
-	userKey key = iota
-)
+var userKey key
 
 func JwtAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

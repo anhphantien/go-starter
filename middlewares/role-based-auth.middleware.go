@@ -8,7 +8,7 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-func RoleAuth(roles ...string) mux.MiddlewareFunc {
+func RoleBasedAuth(roles ...string) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			currentUser, ok := GetCurrentUser(w, r)

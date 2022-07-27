@@ -37,7 +37,7 @@ func BookRouter(r *mux.Router) {
 	s.HandleFunc("/books/{id}",
 		middlewares.NewChain(
 			middlewares.JwtAuth,
-			middlewares.RoleAuth(
+			middlewares.RoleBasedAuth(
 				// enums.User.Role.ADMIN,
 				enums.User.Role.USER,
 			),
