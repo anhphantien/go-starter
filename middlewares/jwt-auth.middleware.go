@@ -6,7 +6,6 @@ import (
 	"go-starter/errors"
 	"go-starter/models"
 	"net/http"
-	"regexp"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -18,16 +17,14 @@ var userKey key
 
 func JwtAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		regexp := regexp.MustCompile(`[B|b]earer\s+`)
-
 		tokenString := r.Header.Get("Authorization")
-		if regexp.Match([]byte(tokenString)) {
-			tokenString = regexp.ReplaceAllString(tokenString, "")
+		if len(tokenString) > 6 && strings.ToUpper(tokenString[0:7]) == "BEARER " {
+			tokenString = tokenString[7:]
 		}
 
 		claims := jwt.MapClaims{}
 		_, err := jwt.ParseWithClaims(tokenString, claims,
-			func(token *jwt.Token) (any, error) {
+			func(*jwt.Token) (any, error) {
 				return env.JWT_SECRET, nil
 			},
 		)
