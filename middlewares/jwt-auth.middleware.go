@@ -18,9 +18,11 @@ var userKey key
 func JwtAuth(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenString := r.Header.Get("Authorization")
-		if len(tokenString) > 6 && strings.ToUpper(tokenString[0:7]) == "BEARER " {
-			tokenString = tokenString[7:]
+		if len(tokenString) < 7 || strings.ToUpper(tokenString[0:7]) != "BEARER " {
+			errors.UnauthorizedException(w, r, jwt.ErrTokenMalformed.Error())
+			return
 		}
+		tokenString = tokenString[7:]
 
 		claims := jwt.MapClaims{}
 		_, err := jwt.ParseWithClaims(tokenString, claims,
