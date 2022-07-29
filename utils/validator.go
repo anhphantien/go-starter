@@ -21,7 +21,7 @@ func ValidateRequestBody(w http.ResponseWriter, r *http.Request, payload any) []
 
 		for i, fieldError := range validationErrors {
 			err[i] = response.Error{
-				Property: strings.ToLower(fieldError.Field()),
+				Field: strings.ToLower(fieldError.Field()),
 				Message: func(fe validator.FieldError) string {
 					switch fe.Tag() {
 					case "required":

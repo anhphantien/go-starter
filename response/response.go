@@ -6,8 +6,8 @@ import (
 )
 
 type Error struct {
-	Property string `json:"property"`
-	Message  string `json:"message"`
+	Field   string `json:"field"`
+	Message string `json:"message"`
 }
 
 type Response struct {
