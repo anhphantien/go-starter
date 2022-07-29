@@ -6,6 +6,7 @@ import (
 	"go-starter/response"
 	"io"
 	"net/http"
+	"reflect"
 	"strings"
 
 	"github.com/go-playground/validator/v10"
@@ -15,13 +16,22 @@ func ValidateRequestBody(w http.ResponseWriter, r *http.Request, payload any) []
 	_payload, _ := io.ReadAll(r.Body)
 	json.Unmarshal(_payload, payload)
 
-	if err := validator.New().Struct(payload); err != nil {
+	validate := validator.New()
+	validate.RegisterTagNameFunc(func(fld reflect.StructField) string {
+		name := strings.SplitN(fld.Tag.Get("json"), ",", 2)[0]
+		if name == "-" {
+			return ""
+		}
+		return name
+	})
+
+	if err := validate.Struct(payload); err != nil {
 		validationErrors := err.(validator.ValidationErrors)
 		err := make([]response.Error, len(validationErrors))
 
 		for i, fieldError := range validationErrors {
 			err[i] = response.Error{
-				Field: strings.ToLower(fieldError.Field()),
+				Field: fieldError.Field(),
 				Message: func(fe validator.FieldError) string {
 					switch fe.Tag() {
 					case "required":
