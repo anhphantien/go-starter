@@ -12,6 +12,7 @@ const (
 	FILE_NOT_FOUND      = "file not found"
 	INVALID_FILE_FORMAT = "invalid file format"
 	INVALID_PASSWORD    = "invalid password"
+	MISSING_JWT_AUTH    = "missing JWT authentication"
 	PAYLOAD_TOO_LARGE   = "payload too large"
 	PERMISSION_DENIED   = "permission denied"
 )

@@ -51,7 +51,7 @@ func GetCurrentUser(w http.ResponseWriter, r *http.Request) (models.CurrentUser,
 
 	claims, ok := r.Context().Value(userKey).(jwt.MapClaims)
 	if !ok {
-		errors.UnauthorizedException(w, r)
+		errors.InternalServerErrorException(w, r, errors.MISSING_JWT_AUTH)
 		return currentUser, false
 	}
 
